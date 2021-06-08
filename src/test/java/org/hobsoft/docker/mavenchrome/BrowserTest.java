@@ -29,38 +29,16 @@ import static org.junit.Assert.assertThat;
  */
 public class BrowserTest
 {
-	// ----------------------------------------------------------------------------------------------------------------
-	// fields
-	// ----------------------------------------------------------------------------------------------------------------
-	
-	private WebDriver driver;
-	
-	// ----------------------------------------------------------------------------------------------------------------
-	// JUnit methods
-	// ----------------------------------------------------------------------------------------------------------------
-	
-	@Before
-	public void setUp()
-	{
-		ChromeOptions options = new ChromeOptions()
-			.setHeadless(true);
-		
-		driver = new ChromeDriver(options);
-	}
-	
-	@After
-	public void tearDown()
-	{
-		driver.close();
-	}
-	
-	// ----------------------------------------------------------------------------------------------------------------
-	// tests
-	// ----------------------------------------------------------------------------------------------------------------
-	
+
 	@Test
 	public void canDuck()
 	{
+		System.setProperty("webdriver.chrome.driver", "/usr/bin/chromedriver");
+                ChromeOptions chromeOptions = new ChromeOptions();
+                chromeOptions.addArguments("--headless");
+                chromeOptions.addArguments("--no-sandbox");
+
+                WebDriver driver = new ChromeDriver(chromeOptions);
 		driver.get("https://duckduckgo.com/");
 		driver.findElement(By.id("search_form_input_homepage")).sendKeys("fish");
 		driver.findElement(By.id("search_button_homepage")).click();
