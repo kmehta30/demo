@@ -1,0 +1,23 @@
+rm -rf mydockerfile1
+mkdir mydockerfile1
+cd mydockerfile1
+git clone https://github.com/kmehta30/demo.git
+touch dockerfile
+cat<<EOT>> dockerfile
+FROM maven:3.8.1-jdk-8
+
+ADD demo /
+
+RUN curl -sS -o - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -\
+	&&  echo "deb [arch=amd64]  http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list \
+	&& apt-get -y update \
+	&& apt-get -y install google-chrome-stable \
+	&& wget https://chromedriver.storage.googleapis.com/91.0.4472.19/chromedriver_linux64.zip \
+	&& unzip chromedriver_linux64.zip \
+	&& mv chromedriver /usr/bin/chromedriver \
+	&& chown root:root /usr/bin/chromedriver \
+	&& chmod +x /usr/bin/chromedriver \
+    && mvn test
+EOT
+sudo docker build -t test:$BUILD_NUMBER .
+sudo docker run -P test:$BUILD_NUMBER
